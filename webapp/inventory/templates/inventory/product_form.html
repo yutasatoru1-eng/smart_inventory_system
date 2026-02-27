@@ -1,0 +1,11 @@
+{% extends "inventory/base.html" %}
+
+{% block content %}
+<h2>{% if product %}Edit Product{% else %}New Product{% endif %}</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn btn-success" type="submit">Save</button>
+</form>
+{% endblock %}

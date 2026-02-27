@@ -1,0 +1,89 @@
+{% extends "inventory/base.html" %}
+
+{% block content %}
+
+<h2 class="dashboard-title mb-4">Product Dashboard</h2>
+
+<!-- Dashboard Cards -->
+<div class="row mb-4">
+
+    <!-- Total Products -->
+    <div class="col-md-6">
+        <div class="card p-4 text-center">
+            <h5 class="mb-2">Total Products</h5>
+            <h2 class="fw-bold">{{ products|length }}</h2>
+        </div>
+    </div>
+
+    <!-- Total Stock Units -->
+    <div class="col-md-6">
+        <div class="card p-4 text-center">
+            <h5 class="mb-2">Total Stock Units</h5>
+            <h2 class="fw-bold">
+                {% with total=0 %}
+                    {% for p in products %}
+                        {% with total=total|add:p.quantity_in_stock %}{% endwith %}
+                    {% endfor %}
+                {% endwith %}
+                {{ products|length }}
+            </h2>
+        </div>
+    </div>
+
+</div>
+
+<!-- Products Table -->
+<div class="card p-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="mb-0">All Products</h4>
+        <a href="{% url 'inventory:product_create' %}" class="btn btn-primary">
+            + Add Product
+        </a>
+    </div>
+
+    <table class="table table-hover align-middle">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th class="text-end">Actions</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for p in products %}
+            <tr>
+                <td>{{ p.id }}</td>
+                <td>{{ p.name }}</td>
+                <td>{{ p.category }}</td>
+                <td>${{ p.price }}</td>
+                <td>{{ p.quantity_in_stock }}</td>
+                <td class="text-end">
+                    <a href="{% url 'inventory:product_update' p.id %}"
+                       class="btn btn-sm btn-secondary">
+                        Edit
+                    </a>
+                    <a href="{% url 'inventory:product_delete' p.id %}"
+                       class="btn btn-sm btn-danger">
+                        Delete
+                    </a>
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="6" class="text-center text-muted">
+                    No products available
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}
